@@ -52,15 +52,15 @@ def drawWorld(world: World, screen: pygame.Surface):
 
 
 def renderWin(screen: pygame.Surface):
-    font = pygame.font.SysFont("arial", 30)
-    text = font.render("You win!", True, (0, 255, 0))
-    screen.blit(text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+    font = pygame.font.SysFont("arial", 15)
+    text = font.render("You win! Press Enter to play a new game.", True, (0, 255, 0))
+    screen.blit(text, (WINDOW_WIDTH / 2 - 15, WINDOW_HEIGHT / 2 - 15))
 
 
 def renderOver(screen: pygame.Surface):
-    font = pygame.font.SysFont("arial", 30)
-    text = font.render("Game over!", True, (255, 0, 0))
-    screen.blit(text, (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+    font = pygame.font.SysFont("arial", 15)
+    text = font.render("Game over! Press Enter to play a new game.", True, (255, 0, 0))
+    screen.blit(text, (WINDOW_WIDTH / 2 - 15, WINDOW_HEIGHT / 2 - 15))
 
 
 def handle_mouseup(event: pygame.event.Event):
@@ -80,11 +80,15 @@ def handle_mouseup(event: pygame.event.Event):
             world.mark_mine(event.pos[0] // 30, event.pos[1] // 30)
 
 
-def checkExit():
+def handleOperation():
+    global world, clicked
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            world = World.from_((20, 20, 20))
+            clicked = set()
 
 
 while True:
@@ -97,8 +101,8 @@ while True:
         drawWorld(world, screen)
     elif world.win:
         renderWin(screen)
-        checkExit()
+        handleOperation()
     else:
         renderOver(screen)
-        checkExit()
+        handleOperation()
     pygame.display.update()
